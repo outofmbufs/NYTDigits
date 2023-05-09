@@ -30,6 +30,13 @@ class DigitsPuzzle:
 
     CHAINMODE = object()                       # sentinel for forced_operand
 
+    # a complete dictionary of possible operations and their symbol
+    # useful for pretty-printing etc
+    OPSYMS = {operator.add: "+",
+              operator.sub: "-",
+              operator.mul: "*",
+              operator.floordiv: "/"}
+
     def __init__(self, target, *sources, forced_operand=None):
         """Initialize a NYT Digits Puzzle.
 
@@ -172,16 +179,9 @@ if __name__ == "__main__":
         if not moves:
             print("No solution found")
         else:
-            for m in moves:
-                names = {operator.add: "+",
-                         operator.sub: "-",
-                         operator.mul: "*",
-                         operator.floordiv: "/"}
-
-                # ".get" with default just in case something gets
-                # generalized from the known operators above
-                op, rands = m
-                print(f"{names.get(op, str(op))}    {rands}")
+            for op, rands in moves:
+                opstr = DigitsPuzzle.OPSYMS.get(op, str(op))
+                print(f"{opstr} {rands}")
         print(ps.stats)
 
     cmdmain()
