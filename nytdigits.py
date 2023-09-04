@@ -167,6 +167,8 @@ if __name__ == "__main__":
         parser.add_argument('-c', '--chainmode',
                             action='store_const',
                             const=DigitsPuzzle.CHAINMODE)
+        parser.add_argument('-A', '--all',
+                            action='store_true')
         parser.add_argument('target', type=int)
         parser.add_argument('values', type=int, nargs='+')
         args = parser.parse_args()
@@ -174,14 +176,26 @@ if __name__ == "__main__":
         d = DigitsPuzzle(args.target, *args.values,
                          forced_operand=args.chainmode)
         ps = PuzzleSolver()
-        moves = ps.solve(d)
+        n = 1
+        if args.all:
+            n = -1
+        moves = ps.solve(d, n=n)
 
         if not moves:
             print("No solution found")
         else:
-            for op, rands in moves:
-                opstr = DigitsPuzzle.OPSYMS.get(op, str(op))
-                print(f"{opstr} {rands}")
+            if n == 1:
+                for op, rands in moves:
+                    opstr = DigitsPuzzle.OPSYMS.get(op, str(op))
+                    print(f"{opstr} {rands}")
+            else:
+                solutions = moves
+                print(f"Found {len(solutions)} solutions.")
+                for ith, moves in enumerate(solutions):
+                    print(f"Solution #{ith+1}")
+                    for op, rands in moves:
+                        opstr = DigitsPuzzle.OPSYMS.get(op, str(op))
+                        print(f"{opstr} {rands}")
         print(ps.stats)
 
     cmdmain()

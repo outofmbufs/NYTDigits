@@ -132,20 +132,34 @@ class PuzzleSolver:
                         self._maxq = max(self._maxq, len(q))
 
     def solve(self, puzzle, n=1):
-        """Solve the puzzle, return n solutions (by default: 1)"""
+        """Solve the puzzle, return n solutions (by default: 1)
+
+        If n <= 0 then return ALL solutions.
+        If n == 1 return the first ("best") solution
+        If n > 1 return n solutions a sequences of up to n solutions;
+                 there might be fewer of course.
+        """
 
         g = self._solve(puzzle)
         solutions = []
-        for i in range(n):
+        if n <= 0:
+            counter = itertools.count()
+        else:
+            counter = range(n)
+        for i in counter:
             try:
                 sol = next(g)
-                if n == 1:             # special case, just return the one
-                    return sol
-                else:
-                    solutions.append(sol)
             except StopIteration:
                 break
-        return solutions
+            solutions.append(sol)
+
+        if n == 1:
+            if len(solutions) == 1:
+                return solutions[0]      # return it naked, not in a list
+            else:
+                return None
+        else:
+            return solutions             # return the list
 
     @property
     def stats(self):

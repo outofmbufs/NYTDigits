@@ -119,6 +119,12 @@ Command argument -c will force chain mode:
 PuzzleStatistics(maxq=1041, iterations=193)
 ```
 
+To see all the solutions instead of just one:
+```
+% python3 nytdigits.py -A 123 5 9 10 14 19 21
+```
+[ there are 83 solutions in this example; they are not shown here ]
+
 ## Tests
 Unit tests for the DigitsPuzzle object:
 ```
