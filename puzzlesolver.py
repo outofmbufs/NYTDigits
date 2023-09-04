@@ -35,8 +35,8 @@ class PuzzleSolver:
 
     STATS = namedtuple('PuzzleStatistics', ['maxq', 'iterations'])
 
-    def solve(self, puzzle=None):
-        """Arbitrary puzzle search/solver.
+    def _solve(self, puzzle):
+        """Arbitrary puzzle search/solver. This is the GENERATOR.
 
         Returns a list of moves which is a puzzle solution, or None.
 
@@ -118,17 +118,34 @@ class PuzzleSolver:
                 z, movetrail = q.pop(0)
             except IndexError:
                 # no solution was found
-                return None
+                return
 
             for move in z.legalmoves():
                 z2 = z.copy_and_move(move)
                 z2state = z2.canonicalstate()
                 if z2state not in statetrail:
                     if z2.endstate:
-                        return movetrail + [move]
-                    statetrail.add(z2state)
-                    q.append((z2, movetrail + [move]))
-                    self._maxq = max(self._maxq, len(q))
+                        yield movetrail + [move]
+                    else:
+                        statetrail.add(z2state)
+                        q.append((z2, movetrail + [move]))
+                        self._maxq = max(self._maxq, len(q))
+
+    def solve(self, puzzle, n=1):
+        """Solve the puzzle, return n solutions (by default: 1)"""
+
+        g = self._solve(puzzle)
+        solutions = []
+        for i in range(n):
+            try:
+                sol = next(g)
+                if n == 1:             # special case, just return the one
+                    return sol
+                else:
+                    solutions.append(sol)
+            except StopIteration:
+                break
+        return solutions
 
     @property
     def stats(self):
