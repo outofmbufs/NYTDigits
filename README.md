@@ -1,5 +1,7 @@
 # NYTimes Digits Puzzle Solver
 
+NOTE: The NYT doesn't publish these puzzles any more.
+
 This is a command-line interface for solving NYTimes 'Digits' Puzzles:
 
 [https://www.nytimes.com/games/digits](https://www.nytimes.com/games/digits)
